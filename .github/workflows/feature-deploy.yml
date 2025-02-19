@@ -18,6 +18,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.6 #uses a terraform version that supports chdir
 
       - name: Terraform Init
         run: terraform init -chdir=Modules/s3
