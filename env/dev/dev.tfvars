@@ -1,4 +1,4 @@
-bucket_name        = "iac-git-demo-buket"
+bucket_name        = "iac-git-demo-bukets"
 lifecycle_days     = 90
 bucket_prefix      = "my-bucket-prefix"
 versioning         = false
