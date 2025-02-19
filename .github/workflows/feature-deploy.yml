@@ -21,6 +21,8 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+          cd env/dev
+          terraform init
 
       - name: Terraform Format Check
         run: terraform fmt -check
