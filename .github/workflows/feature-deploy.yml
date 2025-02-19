@@ -1,0 +1,32 @@
+name: Terraform Validation (Feature Branch)
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - feature/*
+
+jobs:
+  terraform-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -var-file=Env/dev/dev.tfvars
