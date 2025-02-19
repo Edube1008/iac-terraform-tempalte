@@ -20,9 +20,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        run: terraform init
-          cd env/dev
-          terraform init
+        run: terraform init -chdir=Modules/s3
 
       - name: Terraform Format Check
         run: terraform fmt -check
