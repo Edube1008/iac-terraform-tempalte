@@ -29,4 +29,5 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -var-file=Env/dev/dev.tfvars
+        run: terraform plan -var-file=dev.tfvars
+
