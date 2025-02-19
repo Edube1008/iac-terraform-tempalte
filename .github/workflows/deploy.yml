@@ -1,0 +1,70 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Modules/s3/**"
+      - "Env/**"
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init -backend-config=Env/dev/backend.tf
+
+      - name: Terraform Plan
+        run: terraform plan -var-file=Env/dev/dev.tfvars
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var-file=Env/dev/dev.tfvars
+
+  deploy-qut:
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment: qut
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init -backend-config=Env/qut/backend.tf
+
+      - name: Terraform Plan
+        run: terraform plan -var-file=Env/qut/qut.tfvars
+
+      - name: Terraform Apply (Manual Approval)
+        run: terraform apply -auto-approve -var-file=Env/qut/qut.tfvars
+        env:
+          APPROVAL_REQUIRED: true
+
+  deploy-prod:
+    needs: deploy-qut
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        run: terraform init -backend-config=Env/prod/backend.tf
+
+      - name: Terraform Plan
+        run: terraform plan -var-file=Env/prod/prod.tfvars
+
+      - name: Terraform Apply (Manual Approval)
+        run: terraform apply -auto-approve -var-file=Env/prod/prod.tfvars
+        env:
+          APPROVAL_REQUIRED: true
